@@ -1,0 +1,171 @@
+@import 'tailwindcss';
+
+@source '../**/*.blade.php';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../**/*.js';
+@source '../../app/**/*.php';
+
+/*
+ * Kaniva Bangladesh design system.
+ * Brand: primary brown #8B2E1C, cream #FFF4EC, heading #333333, subtext #8A8A8A.
+ */
+@theme {
+    --font-sans: 'Nunito', 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+
+    --color-background: oklch(1 0 0);
+    --color-foreground: oklch(0.33 0 0);
+    --color-cream: oklch(0.971 0.016 62);
+    --color-card: oklch(1 0 0);
+    --color-primary: oklch(0.424 0.128 33.8);
+    --color-primary-dark: oklch(0.37 0.12 33.8);
+    --color-primary-foreground: oklch(0.995 0.005 62);
+    --color-muted: oklch(0.971 0.016 62);
+    --color-muted-foreground: oklch(0.5 0 0);
+    --color-accent: oklch(0.93 0.035 62);
+    --color-accent-foreground: oklch(0.424 0.128 33.8);
+    --color-destructive: oklch(0.577 0.245 27.325);
+    --color-success: oklch(0.55 0.13 155);
+    --color-success-foreground: oklch(0.995 0.005 62);
+    --color-border: oklch(0.912 0.014 62);
+
+    --radius-xl: 1rem;
+    --shadow-card: 0 10px 30px -18px oklch(0.42 0.13 34 / 0.45);
+    --shadow-soft: 0 6px 18px -10px oklch(0.42 0.13 34 / 0.35);
+}
+
+@layer base {
+    * { border-color: var(--color-border); }
+    html { scroll-behavior: smooth; }
+    body {
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+        font-family: var(--font-sans);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { color: var(--color-foreground); font-weight: 800; letter-spacing: -0.01em; }
+    [x-cloak] { display: none !important; }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+}
+
+@utility section { padding-block: 3rem; }
+@utility section-cream { padding-block: 3rem; background-color: var(--color-cream); }
+@utility container-page {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding-inline: 1rem;
+    @media (min-width: 768px) { padding-inline: 2rem; }
+}
+@utility card-soft {
+    border-radius: 1rem;
+    background-color: var(--color-card);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+}
+@utility heading-major { text-transform: uppercase; letter-spacing: 0.01em; }
+@utility no-scrollbar {
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+}
+@utility prose-content {
+    color: var(--color-foreground);
+    line-height: 1.75;
+    & h2 { font-size: 1.25rem; margin-top: 1.75rem; margin-bottom: 0.5rem; }
+    & h3 { font-size: 1.1rem; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+    & p { margin-bottom: 1rem; }
+    & ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 1rem; }
+}
+
+/* Buttons */
+@utility btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding-inline: 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background-color 150ms, color 150ms, border-color 150ms, transform 150ms;
+    cursor: pointer;
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+    & svg { width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+}
+@utility btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    &:hover:not(:disabled) { background-color: var(--color-primary-dark); }
+}
+@utility btn-outline {
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    background-color: var(--color-background);
+    &:hover:not(:disabled) { background-color: var(--color-cream); }
+}
+@utility btn-ghost {
+    color: var(--color-foreground);
+    &:hover { background-color: var(--color-cream); color: var(--color-primary); }
+}
+@utility btn-danger {
+    border: 1px solid var(--color-border);
+    color: var(--color-destructive);
+    background-color: var(--color-background);
+    &:hover { border-color: var(--color-destructive); }
+}
+@utility btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    color: var(--color-foreground);
+    position: relative;
+    &:hover { background-color: var(--color-cream); color: var(--color-primary); }
+}
+
+/* Form controls */
+@utility input {
+    width: 100%;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    padding-inline: 0.875rem;
+    font-size: 0.9rem;
+    &:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px oklch(0.424 0.128 33.8 / 0.15); }
+}
+@utility textarea {
+    width: 100%;
+    min-height: 5.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    padding: 0.625rem 0.875rem;
+    font-size: 0.9rem;
+    &:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px oklch(0.424 0.128 33.8 / 0.15); }
+}
+@utility label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.25rem; }
+
+@utility chip {
+    display: inline-flex;
+    align-items: center;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    padding-inline: 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    &:hover { border-color: var(--color-primary); }
+}
+@utility chip-active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+}

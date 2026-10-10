@@ -1,0 +1,9 @@
+# Used only when the whole project is uploaded into public_html.
+# Sends every request into the /public folder and keeps app files private.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(\.env|composer\.(json|lock)|artisan|package\.json)$ - [F,L]
+    RewriteRule ^(app|bootstrap|config|database|lang|resources|routes|storage|tests|vendor)(/|$) - [F,L]
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

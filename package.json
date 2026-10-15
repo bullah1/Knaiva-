@@ -1,0 +1,31 @@
+{
+  "name": "kaniva-cloudflare",
+  "version": "1.0.0",
+  "description": "Kaniva Bangladesh pet food shop on Cloudflare Workers + D1",
+  "scripts": {
+    "build:css": "tailwindcss -i src/styles.css -o public/assets/app.css --minify",
+    "build:js": "esbuild src/client.ts --bundle --minify --format=iife --outfile=public/assets/app.js",
+    "build": "npm run build:css && npm run build:js",
+    "dev": "npm run build && wrangler dev",
+    "db:migrate:local": "wrangler d1 migrations apply kaniva-db --local",
+    "db:seed:local": "wrangler d1 execute kaniva-db --local --file=seed/seed.sql",
+    "db:migrate": "wrangler d1 migrations apply kaniva-db --remote",
+    "db:seed": "wrangler d1 execute kaniva-db --remote --file=seed/seed.sql",
+    "deploy": "npm run build && wrangler deploy",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "hono": "4.6.20"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20250214.0",
+    "@tailwindcss/cli": "4.1.11",
+    "alpinejs": "3.14.8",
+    "esbuild": "0.24.2",
+    "tailwindcss": "4.1.11",
+    "typescript": "5.7.3",
+    "wrangler": "3.109.2"
+  },
+  "private": true,
+  "type": "module"
+}

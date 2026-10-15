@@ -1,0 +1,2 @@
+# Copy to .dev.vars for local development (optional — localhost works without it)
+SESSION_SECRET=change-me-to-a-long-random-string

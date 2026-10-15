@@ -1,0 +1,18 @@
+{
+  // Kaniva Bangladesh — Cloudflare Workers + D1
+  "name": "kaniva",
+  "main": "src/index.tsx",
+  "compatibility_date": "2025-02-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "kaniva-db",
+      // Replace with the id printed by: npx wrangler d1 create kaniva-db
+      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "observability": { "enabled": true }
+}

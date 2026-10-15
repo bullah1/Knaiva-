@@ -10,39 +10,39 @@ Kaniva পেট ফুড শপ, পুরোটা Cloudflare-এর **ফ্
 
 ---
 
-## একবারের সেটআপ (Windows)
+## সেটআপ — পথ ক: GitHub থেকে (কম্পিউটারে কিছু install করতে হয় না)
 
-**১. যা লাগবে**
-- একটা ফ্রি Cloudflare অ্যাকাউন্ট: https://dash.cloudflare.com/sign-up
-- **Node.js LTS**: https://nodejs.org থেকে নামিয়ে install করুন (Next, Next, Finish)
+1. Cloudflare dashboard → **Workers & Pages** → Create → **Import a repository** → `bullah1/Knaiva-` বেছে নিন
+   (আগেই import করে থাকলে প্রজেক্টটা খুলুন: **knaiva**)
+2. **Settings → Build**-এ:
+   - **Production branch:** `cloudflare` (Laravel কোড আছে `main`-এ, সেটা Cloudflare-এ চলে না)
+   - **Build command:** খালি রাখুন
+   - **Deploy command:** `npx wrangler deploy`
+3. **Deployments** থেকে নতুন deploy চালান, অথবা `cloudflare` ব্রাঞ্চে নতুন commit এলে নিজেই চলবে
+4. প্রথম deploy-এ `kaniva-db` নামের D1 ডাটাবেস **নিজে থেকেই** তৈরি হয়ে Worker-এর সাথে যুক্ত হয়।
+   সাইট প্রথমবার খুললে টেবিল আর ৭০টা পণ্যও নিজে থেকেই বসে যায়।
 
-**২. কোড নামান**
-zip extract করুন, অথবা `git clone https://github.com/bullah1/Knaiva- -b cloudflare kaniva-cf`
+> Build log-এ D1 নিয়ে অনুমতির error এলে: Storage & Databases → D1 → Create → নাম `kaniva-db`।
+> তারপর knaiva → Settings → Bindings → Add → D1 database → Variable name `DB` → `kaniva-db` বেছে নিন, আর আবার deploy করুন।
 
-**৩. ফোল্ডারে PowerShell খুলুন**
-ফোল্ডারের ভেতরে Shift + right-click করে "Open PowerShell window here" বেছে নিন।
+## সেটআপ — পথ খ: নিজের কম্পিউটার থেকে
 
-**৪. দুটো কমান্ড চালান**
+1. **Node.js LTS** install করুন: https://nodejs.org
+2. zip extract করুন, অথবা `git clone https://github.com/bullah1/Knaiva- -b cloudflare kaniva-cf`
+3. ফোল্ডারে PowerShell খুলে চালান:
 
 ```powershell
 npm install
 node scripts/setup.mjs
 ```
 
-`setup.mjs` নিজে থেকেই এই কাজগুলো করে:
-1. Cloudflare লগইন (browser খুলবে, **Allow** চাপুন)
-2. `kaniva-db` ডাটাবেস তৈরি করে তার id `wrangler.jsonc`-এ বসায়
-3. পুরোনো সাইট থেকে ৪০০+ পণ্যের ছবি নামিয়ে প্রজেক্টে রাখে
-4. ডাটাবেসে টেবিল বানায়
-5. ৭টা ক্যাটাগরি, ৭০টা পণ্য, ব্লগ আর সেটিংস বসায়
-6. সাইট deploy করে, শেষে `https://kaniva.<আপনার-নাম>.workers.dev` লিংক দেখায়
-7. কুকির জন্য গোপন চাবি (SESSION_SECRET) সেট করে
+এটা Cloudflare-এ লগইন করায়, পুরোনো সাইট থেকে পণ্যের ছবি নামিয়ে প্রজেক্টে রাখে (তাতে ছবি Cloudflare থেকে দ্রুত আসে), তারপর deploy করে।
 
-**৫. Admin বানান**
+## Admin বানানো
 সাইটের লিংকের শেষে **`/setup`** যোগ করে খুলুন, নিজের নাম, ইমেইল আর পাসওয়ার্ড দিন। এই পেজ শুধু একবারই কাজ করে, প্রথম admin তৈরি হলে বন্ধ হয়ে যায়।
 পরে লগইন করবেন `/auth` থেকে।
 
-**৬. Settings ঠিক করুন**
+## Settings ঠিক করা
 Admin → **Settings**-এ বসান: ফোন, WhatsApp, ইমেইল, bKash/Nagad নম্বর, ডেলিভারি চার্জ, আর আসল ডোমেইন (Canonical domain)।
 
 ---
@@ -50,7 +50,7 @@ Admin → **Settings**-এ বসান: ফোন, WhatsApp, ইমেইল, b
 ## নিজের ডোমেইন যুক্ত করা
 
 1. ডোমেইনটা Cloudflare-এ যোগ করুন (Websites → Add a site) আর nameserver বদলান
-2. Workers & Pages → **kaniva** → Settings → **Domains & Routes** → Add → Custom domain → `www.আপনার-ডোমেইন.com`
+2. Workers & Pages → **knaiva** → Settings → **Domains & Routes** → Add → Custom domain → `www.আপনার-ডোমেইন.com`
 3. Admin → Settings → Canonical domain-এ সেই ঠিকানা দিন
 
 SSL, CDN আর DDoS সুরক্ষা নিজে থেকেই চালু হয়।
@@ -68,8 +68,7 @@ npm run deploy
 ## লোকালে চালানো (ঐচ্ছিক)
 
 ```powershell
-npm run db:migrate:local
-npm run db:seed:local
+npm install
 npm run dev
 ```
 তারপর http://127.0.0.1:8787 খুলুন, admin বানাতে `/setup`।
@@ -91,7 +90,7 @@ npx wrangler d1 export kaniva-db --remote --output=backup.sql
 
 **SEO:** প্রতিটা পেজ server-side রেন্ডার হয়। আলাদা title, description আর canonical। JSON-LD: Product, BreadcrumbList, ItemList, Article, FAQPage, Organization, WebSite, PetStore। `/sitemap.xml` (ছবিসহ) আর `/robots.txt` নিজে থেকেই তৈরি হয়। ফিল্টার করা পেজ noindex।
 
-**নিরাপত্তা:** দাম, স্টক আর কুপন সবসময় সার্ভারে আবার হিসাব হয়। স্টক কমানো হয় শর্তসাপেক্ষ আপডেটে, তাই একই পণ্য দুবার বিক্রি হয় না। কুকি HMAC দিয়ে সাইন করা, প্রতিটা ফর্মে CSRF টোকেন আছে। পাসওয়ার্ড PBKDF2 দিয়ে হ্যাশ করা। অর্ডারের বিস্তারিত শুধু যে ব্রাউজার অর্ডার করেছে সে দেখতে পায়, অন্যদের ফোন নম্বর দিয়ে যাচাই করতে হয়।
+**নিরাপত্তা:** দাম, স্টক আর কুপন সবসময় সার্ভারে আবার হিসাব হয়। স্টক কমানো হয় শর্তসাপেক্ষ আপডেটে, তাই একই পণ্য দুবার বিক্রি হয় না। কুকি HMAC দিয়ে সাইন করা (গোপন চাবি প্রথমবার নিজে থেকে তৈরি হয়ে ডাটাবেসে থাকে; চাইলে `SESSION_SECRET` secret দিয়ে বদলানো যায়), প্রতিটা ফর্মে CSRF টোকেন আছে। পাসওয়ার্ড PBKDF2 দিয়ে হ্যাশ করা। অর্ডারের বিস্তারিত শুধু যে ব্রাউজার অর্ডার করেছে সে দেখতে পায়, অন্যদের ফোন নম্বর দিয়ে যাচাই করতে হয়।
 
 ## নতুন পণ্যের ছবি
 

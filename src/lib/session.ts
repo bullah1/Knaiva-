@@ -1,6 +1,7 @@
 import type { Context, MiddlewareHandler } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
 import type { AppEnv, Session } from './env';
+import { sessionSecret } from './bootstrap';
 
 const COOKIE = 'kv_s';
 const enc = new TextEncoder();
@@ -11,15 +12,6 @@ const fromB64url = (s: string) => Uint8Array.from(atob(s.replace(/-/g, '+').repl
 
 async function hmacKey(secret: string) {
   return crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
-}
-
-const isLocal = (url: string) => ['localhost', '127.0.0.1'].includes(new URL(url).hostname);
-
-/** Cookie signing secret. Only local development may run without SESSION_SECRET. */
-export function secretOf(c: Context<AppEnv>): string | null {
-  const s = c.env.SESSION_SECRET;
-  if (s && s.length >= 16) return s;
-  return isLocal(c.req.url) ? 'dev-only-insecure-secret-change-me' : null;
 }
 
 export async function sign(value: string, secret: string) {
@@ -43,10 +35,7 @@ const fresh = (): Session => ({ cart: {}, orders: [], lang: 'en', csrf: crypto.r
 
 /** Loads the signed cookie session; saves it back after the handler when it changed. */
 export const sessionMiddleware: MiddlewareHandler<AppEnv> = async (c, next) => {
-  const secret = secretOf(c);
-  if (!secret) {
-    return c.html('<h1>Setup incomplete</h1><p>The SESSION_SECRET is missing. Run <code>npx wrangler secret put SESSION_SECRET</code> (see README), then reload.</p>', 503);
-  }
+  const secret = await sessionSecret(c.env);
   let session = fresh();
   const raw = getCookie(c, COOKIE);
   if (raw) {

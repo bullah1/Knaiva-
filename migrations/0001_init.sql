@@ -1,5 +1,5 @@
 -- Kaniva Bangladesh — Cloudflare D1 schema
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
@@ -8,7 +8,7 @@ CREATE TABLE users (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE categories (
+CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   slug TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE categories (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   slug TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
@@ -50,9 +50,9 @@ CREATE TABLE products (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
-CREATE INDEX idx_products_category ON products(category_id);
+CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
 
-CREATE TABLE product_variants (
+CREATE TABLE IF NOT EXISTS product_variants (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
   weight_label TEXT NOT NULL,
@@ -62,9 +62,9 @@ CREATE TABLE product_variants (
   stock INTEGER NOT NULL DEFAULT 0,
   sort_order INTEGER NOT NULL DEFAULT 0
 );
-CREATE INDEX idx_variants_product ON product_variants(product_id);
+CREATE INDEX IF NOT EXISTS idx_variants_product ON product_variants(product_id);
 
-CREATE TABLE coupons (
+CREATE TABLE IF NOT EXISTS coupons (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   code TEXT NOT NULL UNIQUE COLLATE NOCASE,
   discount_type TEXT NOT NULL DEFAULT 'percent',
@@ -77,7 +77,7 @@ CREATE TABLE coupons (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   order_number TEXT NOT NULL UNIQUE,
   customer_name TEXT NOT NULL,
@@ -95,9 +95,9 @@ CREATE TABLE orders (
   notes TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
-CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 
-CREATE TABLE order_items (
+CREATE TABLE IF NOT EXISTS order_items (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
   product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
@@ -109,9 +109,9 @@ CREATE TABLE order_items (
   quantity INTEGER NOT NULL DEFAULT 1,
   line_total REAL NOT NULL
 );
-CREATE INDEX idx_items_order ON order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_items_order ON order_items(order_id);
 
-CREATE TABLE reviews (
+CREATE TABLE IF NOT EXISTS reviews (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
   customer_name TEXT NOT NULL,
@@ -122,7 +122,7 @@ CREATE TABLE reviews (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE blog_posts (
+CREATE TABLE IF NOT EXISTS blog_posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   slug TEXT NOT NULL UNIQUE,
   title TEXT NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE blog_posts (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE hero_banners (
+CREATE TABLE IF NOT EXISTS hero_banners (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL, title_bn TEXT,
   subtitle TEXT, subtitle_bn TEXT,
@@ -147,7 +147,7 @@ CREATE TABLE hero_banners (
   is_active INTEGER NOT NULL DEFAULT 1
 );
 
-CREATE TABLE trust_points (
+CREATE TABLE IF NOT EXISTS trust_points (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   icon TEXT NOT NULL DEFAULT 'paw-print',
   title TEXT NOT NULL, title_bn TEXT,
@@ -156,7 +156,7 @@ CREATE TABLE trust_points (
   is_active INTEGER NOT NULL DEFAULT 1
 );
 
-CREATE TABLE certificates (
+CREATE TABLE IF NOT EXISTS certificates (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
   image_url TEXT,
@@ -164,7 +164,7 @@ CREATE TABLE certificates (
   is_active INTEGER NOT NULL DEFAULT 1
 );
 
-CREATE TABLE settings (
+CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL   -- JSON
 );

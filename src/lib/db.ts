@@ -21,7 +21,7 @@ export const ORDER_STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 
 export async function getSettings(db: D1Database): Promise<Settings> {
   const { results } = await db.prepare('SELECT key, value FROM settings').all<{ key: string; value: string }>();
   const s = structuredClone(DEFAULT_SETTINGS) as Record<string, Record<string, unknown>>;
-  for (const r of results) if (s[r.key]) Object.assign(s[r.key], parseJson(r.value, {}));
+  for (const r of results) if (s[r.key] && r.key !== 'app_secret') Object.assign(s[r.key], parseJson(r.value, {}));
   return s as unknown as Settings;
 }
 

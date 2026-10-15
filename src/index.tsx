@@ -13,9 +13,11 @@ import {
   OrderVerifyPage, ProductPage, ShopPage, Simple, SORTS, STATIC, type Banner, type Cert, type Order, type OrderItem, type Post, type Review, type Trust,
 } from './views/pages';
 import { admin } from './admin';
+import { ensureDatabase } from './lib/bootstrap';
 
 const app = new Hono<AppEnv>();
 
+app.use('*', ensureDatabase);
 app.use('*', sessionMiddleware);
 app.use('*', async (c, next) => {
   const uid = c.get('session').uid;

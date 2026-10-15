@@ -12,19 +12,20 @@
     "db:migrate": "wrangler d1 migrations apply kaniva-db --remote",
     "db:seed": "wrangler d1 execute kaniva-db --remote --file=seed/seed.sql",
     "deploy": "npm run build && wrangler deploy",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "seed": "node scripts/build-seed.mjs"
   },
   "dependencies": {
     "hono": "4.6.20"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250214.0",
+    "@cloudflare/workers-types": "5.20261001.1",
     "@tailwindcss/cli": "4.1.11",
     "alpinejs": "3.14.8",
     "esbuild": "0.24.2",
     "tailwindcss": "4.1.11",
     "typescript": "5.7.3",
-    "wrangler": "3.109.2"
+    "wrangler": "4.146.0"
   },
   "private": true,
   "type": "module"

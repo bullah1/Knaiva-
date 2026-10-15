@@ -1,18 +1,15 @@
 {
   // Kaniva Bangladesh — Cloudflare Workers + D1
-  "name": "kaniva",
+  "name": "knaiva",
   "main": "src/index.tsx",
-  "compatibility_date": "2025-02-14",
+  "compatibility_date": "2025-10-01",
   "compatibility_flags": ["nodejs_compat"],
   "assets": { "directory": "./public", "binding": "ASSETS" },
+  // Wrangler 4.45+ creates this D1 database automatically on the first deploy
+  // and keeps it linked afterwards. Tables and products are created by the
+  // Worker itself on the first visit (src/lib/bootstrap.ts).
   "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "kaniva-db",
-      // Replace with the id printed by: npx wrangler d1 create kaniva-db
-      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
-      "migrations_dir": "migrations"
-    }
+    { "binding": "DB", "database_name": "kaniva-db", "migrations_dir": "migrations" }
   ],
   "observability": { "enabled": true }
 }
